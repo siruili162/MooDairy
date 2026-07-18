@@ -27,6 +27,9 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     private val _currentTheme = MutableStateFlow(prefs.getString("selected_theme", "NATURAL") ?: "NATURAL")
     val currentTheme: StateFlow<String> = _currentTheme.asStateFlow()
 
+    private val _currentFontScale = MutableStateFlow(prefs.getFloat("font_scale", 1.0f))
+    val currentFontScale: StateFlow<Float> = _currentFontScale.asStateFlow()
+
     private val _customApiKey = MutableStateFlow(prefs.getString("custom_api_key", "") ?: "")
     val customApiKey: StateFlow<String> = _customApiKey.asStateFlow()
 
@@ -185,6 +188,11 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     fun updateTheme(theme: String) {
         _currentTheme.value = theme
         prefs.edit().putString("selected_theme", theme).apply()
+    }
+
+    fun updateFontScale(scale: Float) {
+        _currentFontScale.value = scale
+        prefs.edit().putFloat("font_scale", scale).apply()
     }
 
     fun updateApiKey(apiKey: String) {

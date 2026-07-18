@@ -58,89 +58,121 @@ import java.util.Date
 enum class AppTab(val label: String) {
     DIARY("手账日记"),
     AI_CAVE("树洞对话"),
+    TOOLS("疗愈小工具"),
     CHARTS_SETTINGS("心情分析")
 }
 
 @Composable
 fun MainScreen(viewModel: DiaryViewModel) {
     val currentTheme by viewModel.currentTheme.collectAsStateWithLifecycle()
+    val currentFontScale by viewModel.currentFontScale.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableStateOf(AppTab.DIARY) }
 
-    Scaffold(
-        bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                tonalElevation = 8.dp,
-                windowInsets = WindowInsets.navigationBars
-            ) {
-                NavigationBarItem(
-                    selected = selectedTab == AppTab.DIARY,
-                    onClick = { selectedTab = AppTab.DIARY },
-                    icon = {
-                        Icon(
-                            imageVector = if (selectedTab == AppTab.DIARY) Icons.Default.Book else Icons.Default.Book,
-                            contentDescription = "手账日记",
-                            modifier = Modifier.testTag("tab_diary")
-                        )
-                    },
-                    label = { Text(AppTab.DIARY.label, fontWeight = FontWeight.Bold) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        selectedTextColor = MaterialTheme.colorScheme.primary,
-                        unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
-                )
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    val customDensity = remember(density, currentFontScale) {
+        androidx.compose.ui.unit.Density(
+            density = density.density,
+            fontScale = density.fontScale * currentFontScale
+        )
+    }
 
-                NavigationBarItem(
-                    selected = selectedTab == AppTab.AI_CAVE,
-                    onClick = { selectedTab = AppTab.AI_CAVE },
-                    icon = {
-                        Icon(
-                            imageVector = if (selectedTab == AppTab.AI_CAVE) Icons.Default.ChatBubble else Icons.Default.ChatBubble,
-                            contentDescription = "树洞对话",
-                            modifier = Modifier.testTag("tab_chat")
+    CompositionLocalProvider(androidx.compose.ui.platform.LocalDensity provides customDensity) {
+        Scaffold(
+            bottomBar = {
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 8.dp,
+                    windowInsets = WindowInsets.navigationBars
+                ) {
+                    NavigationBarItem(
+                        selected = selectedTab == AppTab.DIARY,
+                        onClick = { selectedTab = AppTab.DIARY },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Book,
+                                contentDescription = "手账日记",
+                                modifier = Modifier.testTag("tab_diary")
+                            )
+                        },
+                        label = { Text(AppTab.DIARY.label, fontWeight = FontWeight.Bold) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
-                    },
-                    label = { Text(AppTab.AI_CAVE.label, fontWeight = FontWeight.Bold) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        selectedTextColor = MaterialTheme.colorScheme.primary,
-                        unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
-                )
 
-                NavigationBarItem(
-                    selected = selectedTab == AppTab.CHARTS_SETTINGS,
-                    onClick = { selectedTab = AppTab.CHARTS_SETTINGS },
-                    icon = {
-                        Icon(
-                            imageVector = if (selectedTab == AppTab.CHARTS_SETTINGS) Icons.Default.AutoGraph else Icons.Default.Settings,
-                            contentDescription = "心情分析与设置",
-                            modifier = Modifier.testTag("tab_settings")
+                    NavigationBarItem(
+                        selected = selectedTab == AppTab.AI_CAVE,
+                        onClick = { selectedTab = AppTab.AI_CAVE },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.ChatBubble,
+                                contentDescription = "树洞对话",
+                                modifier = Modifier.testTag("tab_chat")
+                            )
+                        },
+                        label = { Text(AppTab.AI_CAVE.label, fontWeight = FontWeight.Bold) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
-                    },
-                    label = { Text(AppTab.CHARTS_SETTINGS.label, fontWeight = FontWeight.Bold) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        selectedTextColor = MaterialTheme.colorScheme.primary,
-                        unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
-                )
+
+                    NavigationBarItem(
+                        selected = selectedTab == AppTab.TOOLS,
+                        onClick = { selectedTab = AppTab.TOOLS },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Widgets,
+                                contentDescription = "疗愈小工具",
+                                modifier = Modifier.testTag("tab_tools")
+                            )
+                        },
+                        label = { Text(AppTab.TOOLS.label, fontWeight = FontWeight.Bold) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    )
+
+                    NavigationBarItem(
+                        selected = selectedTab == AppTab.CHARTS_SETTINGS,
+                        onClick = { selectedTab = AppTab.CHARTS_SETTINGS },
+                        icon = {
+                            Icon(
+                                imageVector = if (selectedTab == AppTab.CHARTS_SETTINGS) Icons.Default.AutoGraph else Icons.Default.Settings,
+                                contentDescription = "心情分析与设置",
+                                modifier = Modifier.testTag("tab_settings")
+                            )
+                        },
+                        label = { Text(AppTab.CHARTS_SETTINGS.label, fontWeight = FontWeight.Bold) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    )
+                }
             }
-        }
-    ) { innerPadding ->
-        Crossfade(
-            targetState = selectedTab,
-            animationSpec = tween(300),
-            modifier = Modifier.padding(innerPadding)
-        ) { tab ->
-            when (tab) {
-                AppTab.DIARY -> DiaryScreen(viewModel)
-                AppTab.AI_CAVE -> AiCaveScreen(viewModel)
-                AppTab.CHARTS_SETTINGS -> ChartsAndSettingsScreen(viewModel)
+        ) { innerPadding ->
+            Crossfade(
+                targetState = selectedTab,
+                animationSpec = tween(300),
+                modifier = Modifier.padding(innerPadding)
+            ) { tab ->
+                when (tab) {
+                    AppTab.DIARY -> DiaryScreen(viewModel)
+                    AppTab.AI_CAVE -> AiCaveScreen(viewModel)
+                    AppTab.TOOLS -> ToolsScreen(viewModel)
+                    AppTab.CHARTS_SETTINGS -> ChartsAndSettingsScreen(viewModel)
+                }
             }
         }
     }
@@ -1361,6 +1393,94 @@ fun ChartsAndSettingsScreen(viewModel: DiaryViewModel) {
                                 color = if (isSelected) color else MaterialTheme.colorScheme.onSurface
                             )
                         }
+                    }
+                }
+            }
+        }
+
+        item {
+            Text(
+                text = "⚙️ 全局字体大小设置",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        item {
+            val currentFontScale by viewModel.currentFontScale.collectAsStateWithLifecycle()
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "调整应用内的全局字体大小，支持实时生效。对字形清晰、眼部关怀或长辈使用极有帮助：",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        lineHeight = 16.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        val sizes = listOf(
+                            Pair(0.85f, "较小"),
+                            Pair(1.0f, "标准"),
+                            Pair(1.2f, "较大"),
+                            Pair(1.4f, "特大")
+                        )
+
+                        sizes.forEach { (scale, name) ->
+                            val isSelected = currentFontScale == scale
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .background(
+                                        color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.background,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .border(
+                                        width = if (isSelected) 2.dp else 1.dp,
+                                        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .clickable { viewModel.updateFontScale(scale) }
+                                    .padding(vertical = 10.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = name,
+                                    fontSize = 12.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Text size preview
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(12.dp))
+                            .padding(12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "字体预览：小树林里落满了金黄的松针 🌲✨",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
