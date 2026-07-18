@@ -1,0 +1,6 @@
+{
+  "name": "情绪日记",
+  "description": "一款治愈系的情绪树洞与手账日记软件，搭载AI情感对话引导与心情趋势分析。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
